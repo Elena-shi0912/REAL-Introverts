@@ -12,8 +12,8 @@ function IntroScreen({ onStart }) {
         <h1 className="intro-title">Discover Your Personality Type</h1>
         <p className="intro-subtitle">Uncover how your words reflect who you are.</p>
         <p className="intro-description">
-          EchoType analyzes your posts and predicts your MBTI-inspired personality
-          profile using natural language understanding.
+          MBTIx analyzes your posts and predicts your MBTI-inspired personality
+          type using natural language patterns.
         </p>
         <button className="intro-button" onClick={onStart}>
           Get Started
@@ -23,8 +23,9 @@ function IntroScreen({ onStart }) {
   );
 }
 
-function MainScreen() {
+function MainScreen({ onAnalyze }) {
   const [posts, setPosts] = useState([""]);
+  const [error, setError] = useState("");
 
   const updatePost = (index, value) => {
     const next = [...posts];
@@ -36,17 +37,25 @@ function MainScreen() {
     setPosts([...posts, ""]);
   };
 
-  const handleAnalyze = () => {
-    const texts = posts.map(p => p.trim()).filter(p => p.length > 0);
+  const handleAnalyzeClick = () => {
+    const texts = posts.map((p) => p.trim()).filter(Boolean);
     if (texts.length === 0) {
-      alert("Please write at least one post.");
+      setError("Write at least one post so we have something to analyze.");
       return;
     }
+    setError("");
 
-    // later: call your backend here
-    // fetch("/predict", { method: "POST", body: JSON.stringify({ texts }) })
-    console.log("Would send to backend:", texts);
-    alert("Check console: this is where /predict will be called.");
+    // Fake result for now: static INTP result
+    const fakeResult = {
+      type: "INTP",
+      label: "The Thinker",
+      confidence: 0.86,
+      traits: ["Introverted", "Intuitive", "Thinking", "Perceiving"],
+      summary:
+        "Analytical, curious, and independent. Often lives in ideas, enjoys complex problems, and prefers depth over small talk.",
+    };
+
+    onAnalyze(fakeResult);
   };
 
   return (
@@ -60,7 +69,7 @@ function MainScreen() {
         <section className="post-wrapper">
           <h2 className="post-title">Write like you do online.</h2>
           <p className="post-subtitle">
-            Add one or more posts. More context helps the model understand your style.
+            Add one or more posts. More context helps MBTIx simulate a better prediction.
           </p>
 
           {posts.map((text, i) => (
@@ -76,7 +85,7 @@ function MainScreen() {
               <div className="post-body">
                 <textarea
                   className="post-textarea"
-                  placeholder="Type a post, thought, rant, or story..."
+                  placeholder="Type a post, thought, rant, or story as you normally would..."
                   value={text}
                   onChange={(e) => updatePost(i, e.target.value)}
                 />
@@ -88,8 +97,67 @@ function MainScreen() {
             <button className="add-post-button" onClick={addPost}>
               + Add another post
             </button>
-            <button className="analyze-button" onClick={handleAnalyze}>
+            <button className="analyze-button" onClick={handleAnalyzeClick}>
               Analyze Personality
+            </button>
+          </div>
+
+          {error && <p className="error-text">{error}</p>}
+        </section>
+      </main>
+    </div>
+  );
+}
+
+function ResultScreen({ result, onRestart }) {
+  return (
+    <div className="app-shell">
+      <header className="app-header">
+        <div className="app-logo">MBTIx</div>
+        <p className="app-tagline">Your MBTI — compiled from words.</p>
+      </header>
+
+      <main className="app-main result-layout">
+        <section className="result-card">
+          <div className="result-label">Predicted Type</div>
+          <div className="result-type">
+            {result.type}
+            <span className="result-alias">{result.label}</span>
+          </div>
+
+          <div className="result-traits">
+            {result.traits.map((t) => (
+              <span key={t} className="result-pill">
+                {t}
+              </span>
+            ))}
+          </div>
+
+          <p className="result-summary">{result.summary}</p>
+
+          <div className="result-confidence">
+            <div className="result-confidence-label">
+              Model confidence (simulated)
+            </div>
+            <div className="result-bar-bg">
+              <div
+                className="result-bar-fill"
+                style={{ width: `${result.confidence * 100}%` }}
+              ></div>
+            </div>
+            <div className="result-confidence-value">
+              {(result.confidence * 100).toFixed(1)}%
+            </div>
+          </div>
+
+          <p className="result-note">
+            This result is currently static (INTP) for demo purposes. In the full
+            system, this screen will reflect live predictions from the deployed model.
+          </p>
+
+          <div className="result-actions">
+            <button className="result-secondary" onClick={onRestart}>
+              Try another sample
             </button>
           </div>
         </section>
@@ -99,10 +167,32 @@ function MainScreen() {
 }
 
 export default function App() {
-  const [started, setStarted] = useState(false);
-  return started ? (
-    <MainScreen />
-  ) : (
-    <IntroScreen onStart={() => setStarted(true)} />
-  );
+  const [screen, setScreen] = useState("intro");
+  const [result, setResult] = useState(null);
+
+  if (screen === "intro") {
+    return <IntroScreen onStart={() => setScreen("input")} />;
+  }
+
+  if (screen === "input") {
+    return (
+      <MainScreen
+        onAnalyze={(fakeResult) => {
+          setResult(fakeResult);
+          setScreen("result");
+        }}
+      />
+    );
+  }
+
+  if (screen === "result") {
+    return (
+      <ResultScreen
+        result={result}
+        onRestart={() => setScreen("input")}
+      />
+    );
+  }
+
+  return null;
 }
