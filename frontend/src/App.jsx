@@ -26,6 +26,7 @@ function IntroScreen({ onStart }) {
 function MainScreen({ onAnalyze }) {
   const [posts, setPosts] = useState([""]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const updatePost = (index, value) => {
     const next = [...posts];
@@ -37,25 +38,51 @@ function MainScreen({ onAnalyze }) {
     setPosts([...posts, ""]);
   };
 
-  const handleAnalyzeClick = () => {
+  const handleAnalyzeClick = async () => {
     const texts = posts.map((p) => p.trim()).filter(Boolean);
+
     if (texts.length === 0) {
       setError("Write at least one post so we have something to analyze.");
       return;
     }
+
     setError("");
+    setLoading(true);
 
-    // Fake result for now: static INTP result
-    const fakeResult = {
-      type: "INTP",
-      label: "The Thinker",
-      confidence: 0.86,
-      traits: ["Introverted", "Intuitive", "Thinking", "Perceiving"],
-      summary:
-        "Analytical, curious, and independent. Often lives in ideas, enjoys complex problems, and prefers depth over small talk.",
-    };
+    try {
+      const response = await fetch(
+        "https://mbtibackend-341002537347.us-central1.run.app/predict",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ text: texts.join(" ") }),
+        }
+      );
 
-    onAnalyze(fakeResult);
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // Expecting response like { "prediction": "ENFP" }
+      const realResult = {
+        type: data.prediction || "Unknown",
+        label: data.prediction || "Unknown Type",
+        confidence: data.confidence || null,
+        traits: [], // You can later map prediction to trait list if you want
+        summary: "",
+      };
+
+      onAnalyze(realResult);
+    } catch (err) {
+      console.error("Error calling backend:", err);
+      setError("Could not connect to backend. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -97,8 +124,8 @@ function MainScreen({ onAnalyze }) {
             <button className="add-post-button" onClick={addPost}>
               + Add another post
             </button>
-            <button className="analyze-button" onClick={handleAnalyzeClick}>
-              Analyze Personality
+            <button className="analyze-button" onClick={handleAnalyzeClick} disabled={loading}>
+              {loading ? "Analyzing..." : "Analyze Personality"}
             </button>
           </div>
 
