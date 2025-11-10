@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { MBTI_INFO } from "../assets/mbtiInfo";
 import "../styles/MainScreen.css";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function MainScreen({ onAnalyze }) {
   const [posts, setPosts] = useState([""]);
@@ -13,7 +14,25 @@ export default function MainScreen({ onAnalyze }) {
     setPosts(next);
   };
 
-  const addPost = () => setPosts([...posts, ""]);
+  const addPost = () => {
+    setPosts((prev) => [...prev, ""]);
+    setTimeout(() => {
+      const last = document.querySelector(".post-card:last-child");
+      if (last) {
+        last.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 100);
+  };
+
+  const removePost = (index) => {
+    // If it's the only post, reset to one empty box instead of deleting everything
+    if (posts.length === 1) {
+      setPosts([""]);
+      return;
+    }
+
+    setPosts(posts.filter((_, i) => i !== index));
+  };
 
   const handleAnalyzeClick = async () => {
     const texts = posts.map((p) => p.trim()).filter(Boolean);
@@ -74,26 +93,50 @@ export default function MainScreen({ onAnalyze }) {
             Add one or more posts. More context helps MBTIx simulate a better prediction.
           </p>
 
-          {posts.map((text, i) => (
-            <div className="post-card" key={i}>
-              <div className="post-header">
-                <div className="avatar-circle">{i + 1}</div>
-                <div className="post-user-info">
-                  <div className="post-name">Your Post #{i + 1}</div>
-                  <div className="post-handle">@you</div>
-                </div>
-              </div>
+          <AnimatePresence>
+            {posts.map((text, i) => (
+              <motion.div
+                key={i}
+                className="post-card"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -30 }}
+                transition={{ duration: 0.25, ease: "easeInOut" }}
+                layout
+              >
+                <div className="post-header">
+                  <div className="avatar-circle">{i + 1}</div>
+                  <div className="post-user-info">
+                    <div className="post-name">Your Post #{i + 1}</div>
+                    <div className="post-handle">@you</div>
+                  </div>
 
-              <div className="post-body">
-                <textarea
-                  className="post-textarea"
-                  placeholder="Type a post, thought, rant, or story as you normally would..."
-                  value={text}
-                  onChange={(e) => updatePost(i, e.target.value)}
-                />
-              </div>
-            </div>
-          ))}
+                  {/* 🗑 Remove button */}
+                  <button
+                    className="remove-post-button"
+                    onClick={() => removePost(i)}
+                    disabled={posts.length === 1}
+                    title={
+                      posts.length === 1
+                        ? "At least one post is required"
+                        : "Remove this post"
+                    }
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="post-body">
+                  <textarea
+                    className="post-textarea"
+                    placeholder="Type a post, thought, rant, or story as you normally would..."
+                    value={text}
+                    onChange={(e) => updatePost(i, e.target.value)}
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
 
           <div className="post-actions">
             <button className="add-post-button" onClick={addPost}>

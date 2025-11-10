@@ -127,6 +127,28 @@
   box-shadow: 0 9px 24px rgba(163, 109, 240, 0.38);
 }
 
+.remove-post-button {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  color: var(--text-soft);
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 999px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.remove-post-button:hover:not(:disabled) {
+  background-color: var(--bg-soft);
+  color: var(--accent);
+}
+
+.remove-post-button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
 @media (max-width: 900px) {
   .post-textarea {
     font-size: var(--font-base);
