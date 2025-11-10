@@ -1,0 +1,79 @@
+.intro-screen {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background-image: url("/src/assets/intro-background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.intro-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 0;
+}
+
+.intro-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 800px;
+  padding: 0 2rem;
+}
+
+.intro-title {
+  font-size: var(--font-h1);
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.intro-subtitle {
+  font-weight: 600;
+  font-size: var(--font-h3);
+  margin-bottom: 1.2rem;
+  color: var(--text-main);
+}
+
+.intro-description {
+  font-size: var(--font-lg);
+  line-height: 1.7;
+  color: var(--text-soft);
+  margin-bottom: 2rem;
+}
+
+.intro-button {
+  padding: 1.1rem 2.7rem;
+  border-radius: 999px;
+  border: none;
+  background-color: var(--accent);
+  color: #fff;
+  font-size: var(--font-base);
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(163, 109, 240, 0.35);
+  transition: transform 0.25s ease, background-color 0.25s ease;
+}
+
+.intro-button:hover {
+  background-color: var(--accent-secondary);
+  transform: translateY(-3px);
+}
+
+@media (max-width: 900px) {
+  .intro-title {
+    font-size: var(--font-h1);
+  }
+
+  .intro-description {
+    font-size: var(--font-base);
+  }
+}

@@ -1,0 +1,53 @@
+.app-shell {
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--text-main);
+  padding: 2rem 1.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.app-logo {
+  font-size: 1.3rem;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.app-tagline {
+  margin: 0;
+  font-size: var(--font-sm);
+  color: var(--text-soft);
+}
+
+.app-main {
+  flex: 1;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-text {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  color: #ef4444;
+}
+
+/* shared responsive tweaks */
+@media (max-width: 900px) {
+  .app-shell {
+    padding: 1.5rem 1rem 2.2rem;
+  }
+}
