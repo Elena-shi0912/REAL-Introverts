@@ -117,49 +117,55 @@ function ResultScreen({ result, onRestart }) {
         <p className="app-tagline">Your MBTI — compiled from words.</p>
       </header>
 
-      <main className="app-main result-layout">
-        <section className="result-card">
-          <div className="result-label">Predicted Type</div>
-          <div className="result-type">
-            {result.type}
-            <span className="result-alias">{result.label}</span>
-          </div>
-
-          <div className="result-traits">
-            {result.traits.map((t) => (
-              <span key={t} className="result-pill">
-                {t}
-              </span>
-            ))}
-          </div>
-
-          <p className="result-summary">{result.summary}</p>
-
-          <div className="result-confidence">
-            <div className="result-confidence-label">
-              Model confidence (simulated)
+      <main className="app-main result-layout full-width">
+        <section className="result-card result-flex">
+          <div className="result-content">
+            <div className="result-label">Predicted Type</div>
+            <div className="result-type">
+              {result.type}
+              <span className="result-alias">{result.label}</span>
             </div>
-            <div className="result-bar-bg">
-              <div
-                className="result-bar-fill"
-                style={{ width: `${result.confidence * 100}%` }}
-              ></div>
+
+            <div className="result-traits">
+              {result.traits.map((t) => (
+                <span key={t} className="result-pill">
+                  {t}
+                </span>
+              ))}
             </div>
-            <div className="result-confidence-value">
-              {(result.confidence * 100).toFixed(1)}%
+
+            <p className="result-summary">{result.summary}</p>
+
+            <div className="result-confidence">
+              <div className="result-confidence-label">Model confidence (simulated)</div>
+              <div className="result-bar-bg">
+                <div
+                  className="result-bar-fill"
+                  style={{ width: `${result.confidence * 100}%` }}
+                ></div>
+              </div>
+              <div className="result-confidence-value">
+                {(result.confidence * 100).toFixed(1)}%
+              </div>
+            </div>
+
+            <p className="result-note">
+              This result is currently static (INTP) for demo purposes. In the full
+              system, this screen will reflect live predictions from the deployed model.
+            </p>
+
+            <div className="result-actions">
+              <button className="result-secondary" onClick={onRestart}>
+                Try another sample
+              </button>
             </div>
           </div>
 
-          <p className="result-note">
-            This result is currently static (INTP) for demo purposes. In the full
-            system, this screen will reflect live predictions from the deployed model.
-          </p>
-
-          <div className="result-actions">
-            <button className="result-secondary" onClick={onRestart}>
-              Try another sample
-            </button>
-          </div>
+          <img
+            src={`/${result.type}.png`}  // e.g. /public/images/INTP.png
+            alt={`${result.type} illustration`}
+            className="result-image"
+          />
         </section>
       </main>
     </div>
