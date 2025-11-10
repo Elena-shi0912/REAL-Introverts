@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from google.cloud import storage
 import joblib
 import numpy as np
@@ -6,6 +7,14 @@ import os
 from io import BytesIO
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Environment variables
 BUCKET_NAME = os.environ.get("MODEL_BUCKET", "mbti_model_bucket")
