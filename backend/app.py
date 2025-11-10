@@ -9,9 +9,9 @@ app = Flask(__name__)
 CORS(app)
 
 # Get environment variables
-BUCKET_NAME = os.environ.get("MODEL_BUCKET", "my-model-bucket")
-MODEL_PATH = os.environ.get("MODEL_PATH", "model.pkl")
-VECTORIZER_PATH = os.environ.get("VECTORIZER_PATH", "vectorizer.pkl")
+BUCKET_NAME = os.environ.get("MODEL_BUCKET", "mbti_model_bucket")
+MODEL_PATH = os.environ.get("MODEL_PATH", "svm_model.pkl")
+VECTORIZER_PATH = os.environ.get("VECTORIZER_PATH", "tfidf_vectorizer.pkl")
 
 def load_pickle_from_gcs(bucket_name, blob_name):
     """Download and load pickle object from GCS into memory."""
