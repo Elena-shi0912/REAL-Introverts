@@ -1,15 +1,13 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from fastapi import FastAPI, Request
 from google.cloud import storage
 import pickle
 import numpy as np
 import os
 
-app = Flask(__name__)
-CORS(app)
+app = FastAPI()
 
-# Get environment variables
-BUCKET_NAME = os.environ.get("MODEL_BUCKET", "my-model-bucket")
+# Environment variables
+BUCKET_NAME = os.environ.get("MODEL_BUCKET", "my-bucket")
 MODEL_PATH = os.environ.get("MODEL_PATH", "model.pkl")
 VECTORIZER_PATH = os.environ.get("VECTORIZER_PATH", "vectorizer.pkl")
 
@@ -21,19 +19,19 @@ def load_pickle_from_gcs(bucket_name, blob_name):
     data = blob.download_as_bytes()
     return pickle.loads(data)
 
-# Load both model and vectorizer
+# Load model and vectorizer
 model = load_pickle_from_gcs(BUCKET_NAME, MODEL_PATH)
 vectorizer = load_pickle_from_gcs(BUCKET_NAME, VECTORIZER_PATH)
 
-@app.route("/predict", methods=["POST"])
-def predict():
-    data = request.get_json()
+@app.post("/predict")
+async def predict(request: Request):
+    """Predict endpoint"""
+    data = await request.json()
     text_input = data.get("text", "")
-    # transform the text using your vectorizer
     features = vectorizer.transform([text_input])
     prediction = model.predict(features)
-    return jsonify({"prediction": prediction.tolist()})
+    return {"prediction": prediction.tolist()}
 
-@app.route("/")
+@app.get("/")
 def home():
-    return "Model and vectorizer API running on Cloud Run"
+    return {"message": "Model and vectorizer API running on Cloud Run"}
