@@ -8,20 +8,18 @@
       "dag": {
         "tasks": {
           "train-model": {
-            "taskInfo": {
-              "name": "train-model"
-            },
+            "taskInfo": { "name": "train-model" },
             "componentRef": {
               "name": "google-cloud-pipeline-components.aiplatform.CustomPythonPackageTrainingJobRunOp"
             },
             "inputs": {
               "parameters": {
-                "project": { "runtimeValue": { "constantValue": "winged-odyssey-477518-p0" } },
-                "location": { "runtimeValue": { "constantValue": "us" } },
-                "python_package_gcs_uri": { "runtimeValue": { "constantValue": "gs://mbti_model_bucket/trainer/trainer-0.1.tar.gz" } },
-                "python_module_name": { "runtimeValue": { "constantValue": "trainer.task" } },
-                "container_uri": { "runtimeValue": { "constantValue": "us-docker.pkg.dev/vertex-ai/training/scikit-learn-cpu.0-24:latest" } },
-                "model_serving_container_image_uri": { "runtimeValue": { "constantValue": "us-docker.pkg.dev/vertex-ai/prediction/sklearn-cpu.0-24:latest" } }
+                "project": { "value": "winged-odyssey-477518-p0" },
+                "location": { "value": "us" },
+                "python_package_gcs_uri": { "value": "gs://mbti_model_bucket/trainer/trainer-0.1.tar.gz" },
+                "python_module_name": { "value": "trainer.task" },
+                "container_uri": { "value": "us-docker.pkg.dev/vertex-ai/training/scikit-learn-cpu.0-24:latest" },
+                "model_serving_container_image_uri": { "value": "us-docker.pkg.dev/vertex-ai/prediction/sklearn-cpu.0-24:latest" }
               }
             },
             "outputs": {
@@ -34,9 +32,7 @@
             }
           },
           "deploy-model": {
-            "taskInfo": {
-              "name": "deploy-model"
-            },
+            "taskInfo": { "name": "deploy-model" },
             "componentRef": {
               "name": "google-cloud-pipeline-components.aiplatform.ModelDeployOp"
             },
@@ -50,10 +46,10 @@
                 }
               },
               "parameters": {
-                "endpoint_display_name": { "runtimeValue": { "constantValue": "real-introverts-endpoint" } },
-                "project": { "runtimeValue": { "constantValue": "winged-odyssey-477518-p0" } },
-                "location": { "runtimeValue": { "constantValue": "us" } },
-                "machine_type": { "runtimeValue": { "constantValue": "n1-standard-2" } }
+                "endpoint_display_name": { "value": "real-introverts-endpoint" },
+                "project": { "value": "winged-odyssey-477518-p0" },
+                "location": { "value": "us" },
+                "machine_type": { "value": "n1-standard-2" }
               }
             }
           }
