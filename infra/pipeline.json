@@ -1,0 +1,87 @@
+{
+  "pipelineSpec": {
+    "pipelineInfo": {
+      "name": "train-deploy-pipeline",
+      "description": "Pipeline that trains and deploys a scikit-learn model on Vertex AI."
+    },
+    "root": {
+      "dag": {
+        "tasks": {
+          "train-model": {
+            "taskInfo": {
+              "name": "train-model"
+            },
+            "componentRef": {
+              "name": "google-cloud-pipeline-components.aiplatform.CustomPythonPackageTrainingJobRunOp"
+            },
+            "inputs": {
+              "parameters": {
+                "project": {
+                  "stringValue": "winged-odyssey-477518-p0"
+                },
+                "location": {
+                  "stringValue": "us"
+                },
+                "python_package_gcs_uri": {
+                  "stringValue": "gs://mbti_model_bucket/trainer/trainer-0.1.tar.gz"
+                },
+                "python_module_name": {
+                  "stringValue": "trainer.task"
+                },
+                "container_uri": {
+                  "stringValue": "us-docker.pkg.dev/vertex-ai/training/scikit-learn-cpu.0-24:latest"
+                },
+                "model_serving_container_image_uri": {
+                  "stringValue": "us-docker.pkg.dev/vertex-ai/prediction/sklearn-cpu.0-24:latest"
+                }
+              }
+            },
+            "outputs": {
+              "artifacts": {
+                "model": {
+                  "artifactType": {
+                    "schemaTitle": "google.VertexModel"
+                  },
+                  "metadata": {}
+                }
+              }
+            }
+          },
+          "deploy-model": {
+            "taskInfo": {
+              "name": "deploy-model"
+            },
+            "componentRef": {
+              "name": "google-cloud-pipeline-components.aiplatform.ModelDeployOp"
+            },
+            "inputs": {
+              "artifacts": {
+                "model": {
+                  "taskOutputArtifact": {
+                    "producerTask": "train-model",
+                    "outputArtifactKey": "model"
+                  }
+                }
+              },
+              "parameters": {
+                "endpoint_display_name": {
+                  "stringValue": "real-introverts-endpoint"
+                },
+                "project": {
+                  "stringValue": "winged-odyssey-477518-p0"
+                },
+                "location": {
+                  "stringValue": "us"
+                },
+                "machine_type": {
+                  "stringValue": "n1-standard-2"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "schemaVersion": "2.1.0"
+}
