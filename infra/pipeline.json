@@ -16,20 +16,18 @@
             },
             "inputs": {
               "parameters": {
-                "project": "winged-odyssey-477518-p0",
-                "location": "us",
-                "python_package_gcs_uri": "gs://mbti_model_bucket/trainer/trainer-0.1.tar.gz",
-                "python_module_name": "trainer.task",
-                "container_uri": "us-docker.pkg.dev/vertex-ai/training/scikit-learn-cpu.0-24:latest",
-                "model_serving_container_image_uri": "us-docker.pkg.dev/vertex-ai/prediction/sklearn-cpu.0-24:latest"
+                "project": { "runtimeValue": { "constantValue": "winged-odyssey-477518-p0" } },
+                "location": { "runtimeValue": { "constantValue": "us" } },
+                "python_package_gcs_uri": { "runtimeValue": { "constantValue": "gs://mbti_model_bucket/trainer/trainer-0.1.tar.gz" } },
+                "python_module_name": { "runtimeValue": { "constantValue": "trainer.task" } },
+                "container_uri": { "runtimeValue": { "constantValue": "us-docker.pkg.dev/vertex-ai/training/scikit-learn-cpu.0-24:latest" } },
+                "model_serving_container_image_uri": { "runtimeValue": { "constantValue": "us-docker.pkg.dev/vertex-ai/prediction/sklearn-cpu.0-24:latest" } }
               }
             },
             "outputs": {
               "artifacts": {
                 "model": {
-                  "artifactType": {
-                    "schemaTitle": "google.VertexModel"
-                  },
+                  "artifactType": { "schemaTitle": "google.VertexModel" },
                   "metadata": {}
                 }
               }
@@ -52,10 +50,10 @@
                 }
               },
               "parameters": {
-                "endpoint_display_name": "real-introverts-endpoint",
-                "project": "winged-odyssey-477518-p0",
-                "location": "us",
-                "machine_type": "n1-standard-2"
+                "endpoint_display_name": { "runtimeValue": { "constantValue": "real-introverts-endpoint" } },
+                "project": { "runtimeValue": { "constantValue": "winged-odyssey-477518-p0" } },
+                "location": { "runtimeValue": { "constantValue": "us" } },
+                "machine_type": { "runtimeValue": { "constantValue": "n1-standard-2" } }
               }
             }
           }
