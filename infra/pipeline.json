@@ -58,12 +58,12 @@
               "parameters": {
                 "model_path": {
                   "runtimeValue": {
-                    "constantValue": "gs://mbti_model_bucket/model"
+                    "constantValue": "gs://mbti_model_bucket"
                   }
                 },
                 "display_name": {
                   "runtimeValue": {
-                    "constantValue": "mbti-uploaded-model"
+                    "constantValue": "svm_model.pkl"
                   }
                 },
                 "project_id": {
@@ -89,10 +89,10 @@
   "runtimeConfig": {
     "parameters": {
       "model_path": {
-        "stringValue": "gs://mbti_model_bucket/model"
+        "stringValue": "gs://mbti_model_bucket/"
       },
       "display_name": {
-        "stringValue": "mbti-uploaded-model"
+        "stringValue": "svm_model.pkl"
       },
       "project_id": {
         "stringValue": "winged-odyssey-477518-p0"
