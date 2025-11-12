@@ -1,61 +1,105 @@
 {
   "pipelineSpec": {
-    "pipelineInfo": {
-      "name": "train-deploy-pipeline",
-      "description": "Pipeline that trains and deploys a scikit-learn model on Vertex AI."
+    "schemaVersion": "2.1.0",
+    "sdkVersion": "1.37.0",
+    "components": {
+      "model_upload_task": {
+        "executorLabel": "model_upload_executor",
+        "inputDefinitions": {
+          "parameters": {
+            "model_path": {
+              "parameterType": "STRING"
+            },
+            "display_name": {
+              "parameterType": "STRING"
+            },
+            "project_id": {
+              "parameterType": "STRING"
+            },
+            "location": {
+              "parameterType": "STRING"
+            }
+          }
+        }
+      }
+    },
+    "deploymentSpec": {
+      "executors": {
+        "model_upload_executor": {
+          "container": {
+            "imageUri": "gcr.io/google-cloud-aiplatform/model-upload:latest",
+            "command": [
+              "python3",
+              "-m",
+              "google_cloud_pipeline_components.aiplatform.upload_model"
+            ],
+            "args": [
+              "--model-path",
+              "{{$.inputs.parameters['model_path']}}",
+              "--display-name",
+              "{{$.inputs.parameters['display_name']}}",
+              "--project",
+              "{{$.inputs.parameters['project_id']}}",
+              "--location",
+              "{{$.inputs.parameters['location']}}"
+            ]
+          }
+        }
+      }
     },
     "root": {
       "dag": {
         "tasks": {
-          "train-model": {
-            "taskInfo": { "name": "train-model" },
-            "componentRef": {
-              "name": "google-cloud-pipeline-components.aiplatform.CustomPythonPackageTrainingJobRunOp"
+          "model_upload_task": {
+            "taskInfo": {
+              "name": "model-upload"
             },
             "inputs": {
               "parameters": {
-                "project": { "value": "winged-odyssey-477518-p0" },
-                "location": { "value": "us" },
-                "python_package_gcs_uri": { "value": "gs://mbti_model_bucket/trainer/trainer-0.1.tar.gz" },
-                "python_module_name": { "value": "trainer.task" },
-                "container_uri": { "value": "us-docker.pkg.dev/vertex-ai/training/scikit-learn-cpu.0-24:latest" },
-                "model_serving_container_image_uri": { "value": "us-docker.pkg.dev/vertex-ai/prediction/sklearn-cpu.0-24:latest" }
-              }
-            },
-            "outputs": {
-              "artifacts": {
-                "model": {
-                  "artifactType": { "schemaTitle": "google.VertexModel" },
-                  "metadata": {}
-                }
-              }
-            }
-          },
-          "deploy-model": {
-            "taskInfo": { "name": "deploy-model" },
-            "componentRef": {
-              "name": "google-cloud-pipeline-components.aiplatform.ModelDeployOp"
-            },
-            "inputs": {
-              "artifacts": {
-                "model": {
-                  "taskOutputArtifact": {
-                    "producerTask": "train-model",
-                    "outputArtifactKey": "model"
+                "model_path": {
+                  "runtimeValue": {
+                    "constantValue": "gs://mbti_model_bucket/model"
+                  }
+                },
+                "display_name": {
+                  "runtimeValue": {
+                    "constantValue": "mbti-uploaded-model"
+                  }
+                },
+                "project_id": {
+                  "runtimeValue": {
+                    "constantValue": "winged-odyssey-477518-p0"
+                  }
+                },
+                "location": {
+                  "runtimeValue": {
+                    "constantValue": "us"
                   }
                 }
-              },
-              "parameters": {
-                "endpoint_display_name": { "value": "real-introverts-endpoint" },
-                "project": { "value": "winged-odyssey-477518-p0" },
-                "location": { "value": "us" },
-                "machine_type": { "value": "n1-standard-2" }
               }
+            },
+            "componentRef": {
+              "name": "model_upload_task"
             }
           }
         }
       }
     }
   },
-  "schemaVersion": "2.1.0"
+  "runtimeConfig": {
+    "parameters": {
+      "model_path": {
+        "stringValue": "gs://mbti_model_bucket/model"
+      },
+      "display_name": {
+        "stringValue": "mbti-uploaded-model"
+      },
+      "project_id": {
+        "stringValue": "winged-odyssey-477518-p0"
+      },
+      "location": {
+        "stringValue": "us"
+      }
+    }
+  }
 }
