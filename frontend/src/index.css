@@ -1,0 +1,44 @@
+:root {
+  /* background + text */
+  --bg: #faf9fb;
+  --text-main: #3d2c4a;
+  --text-soft: #7a6785;
+
+  /* accents based on illustration */
+  --accent: #a36df0;
+  /* soft purple */
+  --accent-secondary: #5cd6c6;
+  /* mint/teal */
+  --highlight: #f2c94c;
+  /* yellow-gold stars */
+
+  /* supporting tones */
+  --bg-soft: #f5f1fa;
+  --border-subtle: #e4d8f0;
+
+  --font-lg: 1.25rem;
+  --font-base: 1rem;
+  --font-sm: 0.9rem;
+  --font-xs: 0.8rem;
+
+  --font-h1: 4.2rem;
+  --font-h2: 2.2rem;
+  --font-h3: 1.5rem;
+  --font-accent: 2.8rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg);
+  color: var(--text-main);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: var(--font-base);
+  line-height: 1.6;
+}
